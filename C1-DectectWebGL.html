@@ -1,0 +1,26 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+	<script type="text/javascript">
+		(function() {
+			var _canvas = document.createElement('canvas');
+			var webgl = '';
+
+			try {
+				webgl = _canvas.getContext('webgl');
+			} catch(x) {
+				webgl = null;
+			}
+
+			if(webgl) {
+				alert("Broswer support WebGL");
+			} else {
+				alert("Broswer isn't support WebGL");
+			}
+		})();
+	</script>
+</body>
+</html>
