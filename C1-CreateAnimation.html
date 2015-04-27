@@ -1,0 +1,79 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<script type="text/javascript" src="libs/three.js"></script>
+	<script type="text/javascript" src="libs/CanvasRenderer.js"></script>
+	<script type="text/javascript" src="libs/Projector.js"></script>
+	<script type="text/javascript" src="libs/dat.gui.min.js"></script>
+	<style type="text/css">
+		* {
+			margin: 0;
+			padding: 0;
+		}
+	</style>
+</head>
+<body>
+	<script type="text/javascript">
+		var renderer
+		  , scene
+		  , camera
+		  , control;
+
+		function init() {
+			scene = new THREE.Scene();
+			camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
+			renderer = new THREE.CanvasRenderer();
+			renderer.setClearColor(0xffffff, 1.0);
+			renderer.setSize(window.innerWidth, window.innerHeight);
+
+			for (var i = 0; i < 5; i++) {
+				var cubeGeometry = new THREE.BoxGeometry(10 * Math.random(), 10 * Math.random(), 10 * Math.random());
+				var cubeMaterial = new THREE.MeshNormalMaterial();
+
+				var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+
+				cube.name = 'cube'+i;
+				scene.add(cube);
+			};
+
+			camera.position.x = 15;
+			camera.position.y = 16;
+			camera.position.z = 13;
+
+			camera.lookAt(scene.position);
+
+			document.body.appendChild(renderer.domElement);
+
+			// visual control
+			control = new function() {
+				this.rotationSpeed = 0.005;
+				this.scale = 1;
+			};
+			addContrls(control);
+
+			render();
+		}
+
+		function addContrls(controlObject) {
+			var gui = new dat.GUI();
+			gui.add(controlObject, 'rotationSpeed', -0.1, 0.1);
+			gui.add(controlObject, 'scale', 0.01, 2);
+		}
+
+		function render() {
+			renderer.render(scene, camera);
+
+			for (var i = 0; i < 5; i++) {
+				scene.getObjectByName('cube'+i).rotation.x += control.rotationSpeed;
+				scene.getObjectByName('cube'+i).rotation.y += 0.01;
+				scene.getObjectByName('cube'+i).scale.set(control.scale, control.scale, control.scale);
+			};
+			
+			requestAnimationFrame(render);
+		}
+
+		window.onload = init;
+	</script>
+</body>
+</html>
