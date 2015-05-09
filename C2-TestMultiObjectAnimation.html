@@ -6,6 +6,7 @@
 	<script type="text/javascript" src="libs/CanvasRenderer.js"></script>
 	<script type="text/javascript" src="libs/Projector.js"></script>
 	<script type="text/javascript" src="libs/dat.gui.min.js"></script>
+	<script type="text/javascript" src="libs/trackballControls.js"></script>
 	<style type="text/css">
 		* {
 			margin: 0;
@@ -18,20 +19,24 @@
 		var renderer
 		  , scene
 		  , camera
-		  , control;
+		  , control
+		  , camControl;
+		  
+		var cubeNum = 10;
 
 		function init() {
 			scene = new THREE.Scene();
 			camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
+			camControl = new THREE.TrackballControls(camera);
 			renderer = new THREE.CanvasRenderer();
 			renderer.setClearColor(0xffffff, 1.0);
 			renderer.setSize(window.innerWidth, window.innerHeight);
 
-			for (var i = 0; i < 5; i++) {
+			for (var i = 0; i < cubeNum; i++) {
 				var cubeGeometry = new THREE.BoxGeometry(20 * Math.random(), 20 * Math.random(), 20 * Math.random());
-				var cubeMaterial = new THREE.MeshNormalMaterial();
-
-				var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+				var cube = new THREE.Mesh(cubeGeometry, new THREE.MeshNormalMaterial({
+					opacity: 0.5
+				}));
 				cube.position.set(80 * Math.random() - 30, 5, 80 * Math.random() - 30);
 				
 				cube.name = 'cube'+i;
@@ -52,26 +57,30 @@
 				this.scale = 1;
 			};
 			
-			addContrls(control);
+			// scene's object control
+			//addContrls(control);
 
 			render();
 		}
 
 		function addContrls(controlObject) {
-			var gui = new dat.GUI();
-			gui.add(controlObject, 'rotationSpeed', -0.1, 0.1);
-			gui.add(controlObject, 'scale', 0.01, 2);
+			//var gui = new dat.GUI();
+			//gui.add(controlObject, 'rotationSpeed', -0.1, 0.1);
+			//gui.add(controlObject, 'scale', 0.01, 2);
 		}
 
 		function render() {
 			renderer.render(scene, camera);
 
-			for (var i = 0; i < 5; i++) {
+			for (var i = 0; i < cubeNum; i++) {
 				scene.getObjectByName('cube'+i).rotation.x += control.rotationSpeed;
 				scene.getObjectByName('cube'+i).rotation.y += 0.01;
 				scene.getObjectByName('cube'+i).scale.set(control.scale, control.scale, control.scale);
 			};
 			
+			// Add the lookAt code in the render loop, and the 
+			// object will follow the moving object around.
+			camControl.update();
 			requestAnimationFrame(render);
 		}
 
