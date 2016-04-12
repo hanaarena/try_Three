@@ -15,10 +15,7 @@
 </head>
 <body>
 	<script type="text/javascript">
-		var renderer
-		  , scene
-		  , camera
-		  , control;
+		var renderer, scene, camera, control;
 
 		function init() {
 			scene = new THREE.Scene();
@@ -30,6 +27,8 @@
 			for (var i = 0; i < 5; i++) {
 				var cubeGeometry = new THREE.BoxGeometry(10 * Math.random(), 10 * Math.random(), 10 * Math.random());
 				var cubeMaterial = new THREE.MeshNormalMaterial();
+				// Use normal material so dont have random color
+				// var cubeMaterial = new THREE.MeshBasicMaterial( { color: 0xe66262, wireframeLinewidth: 5 });
 
 				var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
 
